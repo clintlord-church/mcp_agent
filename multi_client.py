@@ -16,6 +16,7 @@ atlassian_parameters = {
 
 async def main():
     async with MultiServerMCPClient() as client:
+        # you can call connect_to_server multiple times to connect to different servers
         await client.connect_to_server("Atlassian", command=atlassian_parameters['command'], args=atlassian_parameters['args'])
 
         agent = create_react_agent(model, client.get_tools())
