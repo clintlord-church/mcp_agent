@@ -14,13 +14,20 @@ atlassian_parameters = {
           f"--jira-token={os.environ.get('JIRA_API_TOKEN')}"]
 }
 
+time_parameters = {
+    "command": "docker",
+    "args": ["run", "-i", "--rm", "mcp/time"]
+}
+
 async def main():
     async with MultiServerMCPClient() as client:
         # you can call connect_to_server multiple times to connect to different servers
         await client.connect_to_server("Atlassian", command=atlassian_parameters['command'], args=atlassian_parameters['args'])
+        await client.connect_to_server("Time", command=time_parameters['command'], args=time_parameters['args'])
 
         agent = create_react_agent(model, client.get_tools())
-        agent_response = await agent.ainvoke({"messages": "Find the ticket in the STAV project that talks about setting up the mac mini with splunk.  Keep trying searches until you find it."})
+        agent_response = await agent.ainvoke({"messages": "What time is it in New York?"})
+        # agent_response = await agent.ainvoke({"messages": "Find the ticket in the STAV project that talks about setting up the mac mini with splunk.  Keep trying searches until you find it."})
         # agent_response = await agent.ainvoke({"messages": "Give me the details on ticket STAV-2660"})
         # agent_response = await agent.ainvoke({"messages": "Find the machine configuration for the agentic design workshop.  Keep trying different searches until you find the one with specific setup steps."})
         return agent_response
